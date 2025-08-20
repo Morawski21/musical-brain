@@ -52,3 +52,6 @@ yarn-error.log*
 
 # Claude Code
 .claude/
+
+# Neo4j database files
+neo4j/
