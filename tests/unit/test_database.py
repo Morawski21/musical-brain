@@ -1,5 +1,5 @@
 import pytest
-from musical_brain.database import DatabaseManager
+from musical_brain.database import DatabaseManager, db
 
 
 class TestDatabaseManager:
@@ -36,3 +36,26 @@ class TestDatabaseManager:
 
         result = await db.test_connection()
         assert result is False
+
+
+class TestDatabaseIntegration:
+    """Integration tests for database functionality."""
+
+    @pytest.mark.asyncio
+    async def test_global_db_instance(self):
+        """Test that global db instance exists and is properly configured."""
+        assert db is not None
+        assert isinstance(db, DatabaseManager)
+        assert db.logger is not None
+
+    @pytest.mark.asyncio
+    async def test_query_logging(self, caplog):
+        """Test that queries are properly logged."""
+        test_db = DatabaseManager()
+        
+        # Test logging when not connected
+        with pytest.raises(RuntimeError):
+            await test_db.run_query("RETURN 1")
+        
+        # Check that error was logged
+        assert "Attempted to run query without database connection" in caplog.text

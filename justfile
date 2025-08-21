@@ -13,7 +13,19 @@ lint:
    
 # Testing
 test:
-    uv run pytest
+    uv run pytest -v
+
+# Run only unit tests (no database required)
+test-unit:
+    uv run pytest tests/unit/ -v
+
+# Run only integration tests (requires running Neo4j)
+test-integration:
+    uv run pytest tests/integration/ -v
+
+# Run tests with coverage report
+test-coverage:
+    uv run pytest --cov=musical_brain --cov-report=html -v
 
 # Start Neo4j database
 db:
