@@ -40,11 +40,19 @@ class DatabaseManager:
     async def run_query(self, query: str, parameters: dict = None) -> list:
         """Run a simple Cypher query and return results."""
         if not self.driver:
+            self.logger.error("Attempted to run query without database connection")
             raise RuntimeError("Not connected to database. Call connect() first.")
 
-        async with self.driver.session() as session:
-            result = await session.run(query, parameters or {})
-            return await result.data()
+        self.logger.debug(f"Executing query: {query[:100]}{'...' if len(query) > 100 else ''}")
+        try:
+            async with self.driver.session() as session:
+                result = await session.run(query, parameters or {})
+                data = await result.data()
+                self.logger.debug(f"Query returned {len(data)} records")
+                return data
+        except Exception as e:
+            self.logger.error(f"Query execution failed: {e}")
+            raise
 
     async def test_connection(self) -> bool:
         """Test if database is working."""
