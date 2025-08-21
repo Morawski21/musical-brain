@@ -1,0 +1,14 @@
+services:
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: musical-brain-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"  # Browser interface
+      - "7687:7687"  # Bolt protocol
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+    restart: unless-stopped
