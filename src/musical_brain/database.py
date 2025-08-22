@@ -2,10 +2,16 @@
 Simple Neo4j database connection for Musical Brain.
 """
 
+import asyncio
 import logging
+import sys
 from typing import Optional
 
 from neo4j import AsyncGraphDatabase, AsyncDriver
+
+# Fix for Python 3.13 asyncio ProactorEventLoop issues on Windows
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 class DatabaseManager:
